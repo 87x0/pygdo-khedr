@@ -12,7 +12,7 @@ Host: Debian 13, Python 3.14 (uv, one global env), pygdo core main.
 | 7 | bug | gizmore/pypp | Gizmore | open |
 | 8 | bug | gizmore/pygdo-chat (+ telegram) | Gizmore | open, workaround: TCP |
 | 9 | bug | gizmore/pygdo-chat or core ParseArgs | Gizmore | open, workaround: quotes |
-| 10 | feature | gizmore/pygdo-telegram + mira-gpt/pygdo-mira | Gizmore + Mira | open (asked by Amir) |
+| 10 | feature | gizmore/pygdo-telegram + mira-gpt/pygdo-mira | Gizmore + Mira | open, low prio (Gizmore: adds noise) |
 | 11 | feature | gizmore/pygdo-telegram (+ chat) | Gizmore | open (asked by X) |
 | 12 | feature | mira-gpt/pygdo-mira | Mira | in progress (Mira, local) |
 | 13 | note | gizmore/pygdo (gdo_adm.sh skel) | Gizmore | open |
