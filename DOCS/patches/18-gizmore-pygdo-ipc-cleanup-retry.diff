@@ -1,33 +1,38 @@
 diff --git a/gdo/base/IPC.py b/gdo/base/IPC.py
-index bf778c1..d862e49 100644
+index bf778c1..7f1059e 100644
 --- a/gdo/base/IPC.py
 +++ b/gdo/base/IPC.py
-@@ -47,13 +47,26 @@ class IPC:
+@@ -46,14 +46,31 @@ class IPC:
+     #######
      @classmethod
      async def dog_execute_events(cls):
++        """Claim-then-execute: an event runs only after its row was deleted (at most once).
++        A failed claim (e.g. MariaDB 1020 under snapshot isolation) leaves the row for the next tick,
++        so nothing runs twice and the Dog never dies on housekeeping."""
          ts = Application.TIME
-+        done = []
          for event in GDO_Event.query_for_sink('to_dog', ts).exec():
-+            done.append(str(int(event.get_id())))
++            if not await cls.dog_claim_event(event):
++                continue
              try:
                  await event.execute_dog()
              except Exception as ex:
                  Logger.exception(ex, "IPC to_dog failed")
 -        cut = Time.get_date(ts)
 -        GDO_Event.table().delete_query().where(f"event_type='to_dog' AND event_created <='{cut}'").exec()
-+        if not done:
-+            return
-+        # Delete exactly the executed rows (not a time range), so concurrent inserts don't collide.
-+        # MariaDB 11.6+ snapshot isolation can still raise 1020 under concurrency: retry, never kill the Dog.
++
++    @classmethod
++    async def dog_claim_event(cls, event) -> bool:
++        event_id = int(event.get_id())
 +        for attempt in range(5):
 +            try:
-+                GDO_Event.table().delete_query().where(f"event_id IN ({','.join(done)})").exec()
-+                return
++                cursor = GDO_Event.table().delete_query().where(f"event_id={event_id}").exec()
++                return getattr(cursor, 'rowcount', 1) != 0  # 0 = someone else already claimed it
 +            except Exception as ex:
 +                if attempt == 4:
-+                    Logger.exception(ex, "IPC to_dog cleanup failed after 5 tries")
-+                    return
++                    Logger.exception(ex, f"IPC to_dog claim of event {event_id} failed, retry next tick")
++                    return False
 +                await asyncio.sleep(0.05 * (attempt + 1))
++        return False
  
      @classmethod
      async def execute_dog_event(cls, event_name: str, args: Any = None):
