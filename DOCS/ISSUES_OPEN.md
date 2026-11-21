@@ -16,6 +16,7 @@ Host: Debian 13, Python 3.14 (uv, one global env), pygdo core main.
 | 11 | feature | gizmore/pygdo-telegram (+ chat) | Gizmore | open (asked by X) |
 | 12 | feature | mira-gpt/pygdo-mira | Mira | in progress (Mira, local) |
 | 13 | note | gizmore/pygdo (gdo_adm.sh skel) | Gizmore | open |
+| 18 | bug | gizmore/pygdo (IPC) | Gizmore | local fix + watchdog, upstream pending |
 
 (#1–#3 and #5 were fixed upstream on 2026-11-20: `get_name()` on a property, `sess.name` ignored, tzdata moved to `gdo/date`, mira deps declared.)
 
@@ -70,3 +71,8 @@ Host: Debian 13, Python 3.14 (uv, one global env), pygdo core main.
 - `./gdo_adm.sh skel <module>` asks `input("This will overwrite files, ok?")` → `EOFError` in non-interactive shells.
 - **Workaround:** `echo y | ./gdo_adm.sh skel <module>`.
 - **Fix idea:** a `--yes` flag, or skip the question when the target has no module files yet.
+
+## #18 Dog dies on MariaDB 1020 in `IPC.dog_execute_events` cleanup
+- **When:** 2026-11-21 10:16 UTC. `DELETE FROM gdo_event WHERE event_type='to_dog' AND event_created <= ...` → `1020 Record has changed since last read` (MariaDB 11.8, snapshot isolation on). The exception reached the event pump, the Dog exited, 22 min no inbound chat.
+- **Local fix (codegeex.dev):** delete exactly the executed event ids, retry 5x with backoff, log instead of crashing. Diff: `DOCS/patch-18-ipc-cleanup.diff`. For Gizmore to take upstream.
+- **Safety net:** `bin/dog-watchdog.sh` in cron every minute restarts the Dog if it is down.

@@ -1,0 +1,33 @@
+diff --git a/gdo/base/IPC.py b/gdo/base/IPC.py
+index bf778c1..d862e49 100644
+--- a/gdo/base/IPC.py
++++ b/gdo/base/IPC.py
+@@ -47,13 +47,26 @@ class IPC:
+     @classmethod
+     async def dog_execute_events(cls):
+         ts = Application.TIME
++        done = []
+         for event in GDO_Event.query_for_sink('to_dog', ts).exec():
++            done.append(str(int(event.get_id())))
+             try:
+                 await event.execute_dog()
+             except Exception as ex:
+                 Logger.exception(ex, "IPC to_dog failed")
+-        cut = Time.get_date(ts)
+-        GDO_Event.table().delete_query().where(f"event_type='to_dog' AND event_created <='{cut}'").exec()
++        if not done:
++            return
++        # Delete exactly the executed rows (not a time range), so concurrent inserts don't collide.
++        # MariaDB 11.6+ snapshot isolation can still raise 1020 under concurrency: retry, never kill the Dog.
++        for attempt in range(5):
++            try:
++                GDO_Event.table().delete_query().where(f"event_id IN ({','.join(done)})").exec()
++                return
++            except Exception as ex:
++                if attempt == 4:
++                    Logger.exception(ex, "IPC to_dog cleanup failed after 5 tries")
++                    return
++                await asyncio.sleep(0.05 * (attempt + 1))
+ 
+     @classmethod
+     async def execute_dog_event(cls, event_name: str, args: Any = None):
