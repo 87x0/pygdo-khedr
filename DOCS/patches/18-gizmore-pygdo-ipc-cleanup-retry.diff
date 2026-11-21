@@ -1,5 +1,5 @@
 diff --git a/gdo/base/IPC.py b/gdo/base/IPC.py
-index bf778c1..7f1059e 100644
+index bf778c1..d0d8c38 100644
 --- a/gdo/base/IPC.py
 +++ b/gdo/base/IPC.py
 @@ -46,14 +46,31 @@ class IPC:
@@ -26,7 +26,7 @@ index bf778c1..7f1059e 100644
 +        for attempt in range(5):
 +            try:
 +                cursor = GDO_Event.table().delete_query().where(f"event_id={event_id}").exec()
-+                return getattr(cursor, 'rowcount', 1) != 0  # 0 = someone else already claimed it
++                return getattr(cursor, 'rowcount', None) == 1  # 0 = claimed by someone else, -1/None = unknown: don't run
 +            except Exception as ex:
 +                if attempt == 4:
 +                    Logger.exception(ex, f"IPC to_dog claim of event {event_id} failed, retry next tick")
