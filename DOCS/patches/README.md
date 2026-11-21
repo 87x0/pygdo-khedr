@@ -9,3 +9,9 @@ Local fixes Khedr runs on codegeex.dev. Apply with `git apply <file>` in the tar
 | 20 | mira-gpt/pygdo-mira (`module_mira.py`, `lang/mira_en.toml`) | Mira | New module config `mira_private_wakeup` (default 0 = unchanged): wake the agent on every inbound private message without its name. |
 
 Tested live on codegeex.dev 2026-11-21 (Dog restarts, voice + document received, private wakeup).
+
+## Open trade-off for #18 (decision: Gizmore)
+- v3 is **at-most-once**: an event whose row was deleted (claimed) but not yet executed is lost if the Dog crashes in between.
+- The to_dog queue carries more than chat notices (audio recording, video controls, other actions), noted by Mira 2026-11-21.
+- Alternative: at-least-once with a status column (claimed_at / done) and idempotent handlers.
+- Before merge: gdotest for competing claimers, MariaDB 1020 rollback, crash between claim and execute.
