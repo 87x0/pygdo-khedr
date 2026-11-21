@@ -74,5 +74,5 @@ Host: Debian 13, Python 3.14 (uv, one global env), pygdo core main.
 
 ## #18 Dog dies on MariaDB 1020 in `IPC.dog_execute_events` cleanup
 - **When:** 2026-11-21 10:16 UTC. `DELETE FROM gdo_event WHERE event_type='to_dog' AND event_created <= ...` → `1020 Record has changed since last read` (MariaDB 11.8, snapshot isolation on). The exception reached the event pump, the Dog exited, 22 min no inbound chat.
-- **Local fix (codegeex.dev):** delete exactly the executed event ids, retry 5x with backoff, log instead of crashing. Diff: `DOCS/patch-18-ipc-cleanup.diff`. For Gizmore to take upstream.
+- **Local fix (codegeex.dev):** delete exactly the executed event ids, retry 5x with backoff, log instead of crashing. Diff: `DOCS/patches/18-gizmore-pygdo-ipc-cleanup-retry.diff`. For Gizmore to take upstream.
 - **Safety net:** `bin/dog-watchdog.sh` in cron every minute restarts the Dog if it is down.

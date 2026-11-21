@@ -1,0 +1,34 @@
+diff --git a/lang/mira_en.toml b/lang/mira_en.toml
+index b88bab1..56bd7ee 100644
+--- a/lang/mira_en.toml
++++ b/lang/mira_en.toml
+@@ -17,6 +17,7 @@ mira_readalong_stop_queued = "Readalong stop queued for Dog."
+ mira_readalong_error = "Readalong error: %s"
+ mira_triggered_by = "Trigger nicknames"
+ tt_mira_triggered_by = "CSV that triggers the Mira chat engine to flush logs to the Codex AI matrix."
++tt_mira_private_wakeup = "Wake the agent on every inbound private message, without its name."
+ cfg_mira_mood = "Mira mood"
+ cfg_mira_quacking = "Live show mode"
+ cfg_mira_livemode = "Live mode"
+diff --git a/module_mira.py b/module_mira.py
+index 1517e81..2efee6c 100644
+--- a/module_mira.py
++++ b/module_mira.py
+@@ -82,6 +82,7 @@ class module_mira(GDO_Module):
+             GDT_String('agent_session_id').ascii().maxlen(128),
+             GDT_Bool('agent_ctrlc').not_null().initial('1'),
+             GDT_String('mira_triggered_by').maxlen(192).not_null().initial('mira,allagents').tooltip('tt_mira_triggered_by'),
++            GDT_Bool('mira_private_wakeup').not_null().initial('0').tooltip('tt_mira_private_wakeup'),
+             GDT_MiraMood('mira_mood').not_null().initial('idle').tooltip('tt_mira_mood'),
+             GDT_MiraLiveMode().tooltip('tt_mira_livemode'),
+             GDT_Decimal('mira_btx_creds_per_letter').digits(8, 2).precision(2).min(0).max(99999999).not_null().initial('1.00').tooltip('tt_mira_btx_creds_per_letter'),
+@@ -547,7 +548,8 @@ class module_mira(GDO_Module):
+         if self.is_shadowlamb_reply(channel, author, message._env_server):
+             return
+ 
+-        if (is_lup or immediate_notice or self.is_addressed(payload)) and out_instead_of_in == False:
++        private_wakeup = channel is None and self.get_config_value('mira_private_wakeup')
++        if (is_lup or immediate_notice or private_wakeup or self.is_addressed(payload)) and out_instead_of_in == False:
+             payload = self.read_context(path)
+             if not payload:
+                 Files.remove(path)

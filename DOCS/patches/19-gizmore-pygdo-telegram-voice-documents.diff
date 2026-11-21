@@ -1,0 +1,35 @@
+diff --git a/connector/Telegram.py b/connector/Telegram.py
+index 7578373..3cf01d2 100644
+--- a/connector/Telegram.py
++++ b/connector/Telegram.py
+@@ -70,6 +70,15 @@ class Telegram(Connector):
+             return document.file_id, document.file_unique_id, name, document.file_size or 0
+         return None
+ 
++    @staticmethod
++    def voice_attachment(msg):
++        """Return Telegram voice note / audio metadata (Khedr local patch, #19)."""
++        media = msg.voice or msg.audio or msg.document
++        if not media:
++            return None
++        name = getattr(media, 'file_name', None) or f'telegram-{media.file_unique_id}.ogg'
++        return media.file_id, media.file_unique_id, name, media.file_size or 0
++
+     async def store_image(self, attachment, context: ContextTypes.DEFAULT_TYPE) -> GDO_File:
+         from gdo.telegram.module_telegram import module_telegram
+ 
+@@ -158,9 +167,14 @@ class Telegram(Connector):
+                 user.save_val('user_displayname', displayname)
+             Application.set_current_user(user)
+             attachment = self.image_attachment(msg)
++            voice = None if attachment else self.voice_attachment(msg)
+             if attachment:
+                 file = await self.store_image(attachment, context)
+                 text = self.image_notice(file, self.text_or_none(msg.caption))
++            elif voice:
++                file = await self.store_image(voice, context)
++                kind = 'document' if msg.document else 'voice'
++                text = self.image_notice(file, self.text_or_none(msg.caption)).replace('Telegram image received', f'Telegram {kind} received', 1)
+             else:
+                 text = self.text_or_none(msg.text)
+             if text is None:
