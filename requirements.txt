@@ -1,1 +1,2 @@
 matplotlib
+piper-tts  # local TTS for private speech (Khedr, 2026-11-26)
