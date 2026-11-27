@@ -1,3 +1,4 @@
 matplotlib
 piper-tts  # local TTS for private speech (Khedr, 2026-11-26)
 databricks-sdk  # hackathon: Databricks workspace access (Khedr, 2026-11-26)
+requests  # $wind: Open-Meteo wind data (Khedr, 2026-11-27)

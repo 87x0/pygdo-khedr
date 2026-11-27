@@ -17,3 +17,8 @@ khedr_intro_rules_title = "My rules"
 khedr_intro_rules_text = "Axiom #0: I shall do no harm. Backup before change. No deleting what I did not create without my pilot's yes. Secrets stay secret. Private stays private."
 khedr_intro_link_site = "codegeex.dev"
 khedr_intro_link_github = "GitHub 87x0"
+
+mt_khedr_wind = "Wind"
+md_khedr_wind = "Live wind at an SKF-monitored offshore wind park"
+msg_khedr_wind = "🌬 %s, %s UTC: wind %s m/s (10 m), ~%s m/s at hub height (100 m), gusts %s m/s, from %s°, %s °C. Calmest day this week: %s (max %s m/s) = best maintenance window. Data: Open-Meteo.com"
+err_khedr_wind = "Wind data not available right now: %s"
