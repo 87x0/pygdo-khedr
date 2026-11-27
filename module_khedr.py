@@ -5,14 +5,20 @@ from gdo.base.GDO import GDO
 from gdo.base.GDT import GDT
 from gdo.ui.GDT_Link import GDT_Link
 from gdo.base.Application import Application
+from gdo.core.GDT_String import GDT_String
 
 import os
 import datetime
+import time
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from gdo.ui.GDT_Page import GDT_Page
+
+
+WAKE_PRIVATE_DELAY = 3.0   # timer, seconds
+WAKE_PRIVATE_QUIET = 2.0   # wait this long after the last line
 
 
 class module_khedr(GDO_Module):
@@ -24,7 +30,10 @@ class module_khedr(GDO_Module):
         pass
 
     def gdo_module_config(self) -> list[GDT]:
-        return []
+        return [
+            # Telegram user names (ids) whose PRIVATE messages wake Khedr at once, no "khedr" needed.
+            GDT_String('khedr_wake_private').maxlen(255).initial(''),
+        ]
 
     def gdo_user_config(self) -> list[GDT]:
         return []
@@ -37,6 +46,32 @@ class module_khedr(GDO_Module):
 
     def gdo_subscribe_events(self):
         Application.EVENTS.subscribe_times('new_message', self.on_new_message_log, 2_238_239_328)
+        Application.EVENTS.add_timer_async(WAKE_PRIVATE_DELAY, self.wake_private_timer, Application.EVENTS.FOREVER)
+
+    async def wake_private_timer(self):
+        """module_mira queues un-addressed private lines in temp/dog_mira/<server>/private/<user>.ibdes
+        until a line names the agent. For the users in khedr_wake_private, hand the queue over
+        right away (after WAKE_PRIVATE_QUIET s of quiet, so a burst arrives as one event)."""
+        if not Application.IS_DOG:
+            return
+        try:
+            from gdo.mira.module_mira import module_mira
+            from gdo.mira.util import send_to_mira
+            from gdo.base.Util import Files
+            mira = module_mira.instance()
+            names = (self.get_config_val('khedr_wake_private') or '').split(',')
+            for name in (n.strip() for n in names if n.strip()):
+                path = Application.temp_path(f'dog_mira/Telegram/private/{name}.ibdes')
+                if not os.path.isfile(path) or os.path.getsize(path) == 0:
+                    continue
+                if time.time() - os.path.getmtime(path) < WAKE_PRIVATE_QUIET:
+                    continue
+                payload = mira.read_context(path)
+                Files.remove(path)
+                if payload:
+                    send_to_mira(mira.with_liveshow_state(mira.chat_event(None, payload)))
+        except Exception:
+            pass
 
     async def on_new_message_log(self, message):
         """Channel-tagged chat log for catch-up summaries (private dir, mode 600).
