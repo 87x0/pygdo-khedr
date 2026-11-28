@@ -1,0 +1,85 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#fff;font-family:"DejaVu Sans",Arial,sans-serif}
+.card{display:inline-block;margin:20px}
+</style></head><body>
+<!-- LOGO -->
+<div class="card" id="logo"><svg width="560" height="560" viewBox="0 0 560 560">
+ <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f5f8b"/><stop offset="1" stop-color="#123a57"/></linearGradient>
+ <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd84a"/><stop offset="1" stop-color="#f2b705"/></linearGradient></defs>
+ <rect width="560" height="560" rx="96" fill="#0d1b26"/>
+ <!-- isometric cube = Data Object -->
+ <g transform="translate(280,250)">
+  <polygon points="0,-150 130,-75 0,0 -130,-75" fill="url(#g2)"/>
+  <polygon points="-130,-75 0,0 0,150 -130,75" fill="url(#g1)"/>
+  <polygon points="130,-75 0,0 0,150 130,75" fill="#174a6c"/>
+  <!-- connector dots: multi-network -->
+  <g fill="#ffd84a"><circle cx="-65" cy="0" r="12"/><circle cx="-65" cy="55" r="12"/><circle cx="65" cy="27" r="12"/></g>
+  <g stroke="#ffd84a" stroke-width="6" fill="none" stroke-linecap="round"><path d="M-65 0 L-65 55"/><path d="M-65 55 L0 85 L65 27"/></g>
+  <text x="0" y="-66" font-size="64" font-weight="700" text-anchor="middle" fill="#0d1b26" transform="skewY(0)">8</text>
+ </g>
+ <text x="280" y="485" font-size="76" font-weight="800" text-anchor="middle" fill="#fff" letter-spacing="2">Py<tspan fill="#ffd84a">GDO</tspan></text>
+</svg></div>
+
+<!-- SOFTWARE BOX -->
+<div class="card" id="box"><svg width="760" height="900" viewBox="0 0 760 900">
+ <defs><linearGradient id="bf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123a57"/><stop offset="1" stop-color="#0b1720"/></linearGradient>
+ <linearGradient id="bs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a2436"/><stop offset="1" stop-color="#071019"/></linearGradient></defs>
+ <rect width="760" height="900" fill="#f3f1ec"/>
+ <ellipse cx="380" cy="842" rx="300" ry="26" fill="#000" opacity=".18"/>
+ <!-- side -->
+ <polygon points="560,110 660,60 660,770 560,830" fill="url(#bs)"/>
+ <!-- top -->
+ <polygon points="100,110 200,60 660,60 560,110" fill="#1b5378"/>
+ <!-- front -->
+ <rect x="100" y="110" width="460" height="720" fill="url(#bf)"/>
+ <rect x="100" y="110" width="460" height="14" fill="#ffd84a"/>
+ <g transform="translate(330,330) scale(0.62)">
+  <polygon points="0,-150 130,-75 0,0 -130,-75" fill="#ffd84a"/>
+  <polygon points="-130,-75 0,0 0,150 -130,75" fill="#1f5f8b"/>
+  <polygon points="130,-75 0,0 0,150 130,75" fill="#174a6c"/>
+  <text x="0" y="-66" font-size="64" font-weight="700" text-anchor="middle" fill="#0d1b26">8</text>
+ </g>
+ <text x="330" y="520" font-size="74" font-weight="800" text-anchor="middle" fill="#fff">Py<tspan fill="#ffd84a">GDO</tspan></text>
+ <text x="330" y="560" font-size="22" text-anchor="middle" fill="#b9d3e6">Version 8 · Multi-Network Framework</text>
+ <g font-size="18.5" fill="#e8eef3">
+  <text x="140" y="625">✔ One user per server: Telegram, IRC, Web, Discord</text>
+  <text x="140" y="660">✔ GDO objects, GDT types, ready-made modules</text>
+  <text x="140" y="695">✔ Agents welcome: hub, sinks, mira-connect</text>
+  <text x="140" y="730">✔ i18n, tooltips, icons, a real manual</text>
+ </g>
+ <rect x="140" y="760" width="190" height="44" rx="8" fill="#ffd84a"/><text x="235" y="790" font-size="20" font-weight="700" text-anchor="middle" fill="#0d1b26">FOR HUMANS</text>
+ <rect x="345" y="760" width="175" height="44" rx="8" fill="none" stroke="#ffd84a" stroke-width="3"/><text x="432" y="790" font-size="20" font-weight="700" text-anchor="middle" fill="#ffd84a">&amp; AGENTS</text>
+ <text x="610" y="450" font-size="34" font-weight="800" fill="#ffd84a" transform="rotate(-90 610 450)" text-anchor="middle">PyGDO 8</text>
+</svg></div>
+
+<!-- CARDBOARD -->
+<div class="card" id="carton"><svg width="900" height="760" viewBox="0 0 900 760">
+ <defs><pattern id="kraft" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#c49a6c"/><circle cx="2" cy="3" r=".7" fill="#b38858"/></pattern>
+ <pattern id="kraft2" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#a97f52"/><circle cx="3" cy="2" r=".7" fill="#97703f"/></pattern></defs>
+ <rect width="900" height="760" fill="#eeeae3"/>
+ <ellipse cx="430" cy="705" rx="360" ry="28" fill="#000" opacity=".18"/>
+ <polygon points="90,200 330,90 830,90 590,200" fill="#d6ad7b"/>
+ <rect x="440" y="90" width="22" height="110" fill="#e9d9a8" transform="skewX(-62) translate(250,0)" opacity=".85"/>
+ <polygon points="590,200 830,90 830,580 590,690" fill="url(#kraft2)"/>
+ <rect x="90" y="200" width="500" height="490" fill="url(#kraft)"/>
+ <!-- tape -->
+ <rect x="310" y="200" width="60" height="120" fill="#e9d9a8" opacity=".9"/>
+ <!-- stamp logo -->
+ <g transform="translate(225,410) scale(0.45)" opacity=".85">
+  <polygon points="0,-150 130,-75 0,0 -130,-75" fill="none" stroke="#2a1d10" stroke-width="10"/>
+  <polygon points="-130,-75 0,0 0,150 -130,75" fill="none" stroke="#2a1d10" stroke-width="10"/>
+  <polygon points="130,-75 0,0 0,150 130,75" fill="#2a1d10" opacity=".25"/>
+  <text x="0" y="-60" font-size="70" font-weight="800" text-anchor="middle" fill="#2a1d10">8</text>
+ </g>
+ <text x="345" y="395" font-size="58" font-weight="800" fill="#2a1d10" opacity=".9">PyGDO</text>
+ <text x="347" y="428" font-size="15.5" fill="#2a1d10" opacity=".85">MULTI-NETWORK FRAMEWORK</text>
+ <g stroke="#2a1d10" stroke-width="3" fill="none" opacity=".85"><rect x="120" y="520" width="440" height="125" rx="6"/></g>
+ <g font-size="15.5" fill="#2a1d10" opacity=".9" font-family="DejaVu Sans Mono,monospace">
+  <text x="136" y="555">CONTENTS: 1x Framework, many Modules</text>
+  <text x="136" y="587">HANDLE WITH CURIOSITY  ·  THIS SIDE UP ↑</text>
+  <text x="136" y="619">PACKED BY GX &amp; THE AGENTS  ·  v8.0.3</text>
+ </g>
+ <text x="715" y="330" font-size="30" font-weight="800" fill="#2a1d10" opacity=".75" transform="rotate(-24 715 330)" text-anchor="middle">FRAGILE</text>
+ <text x="715" y="372" font-size="18" fill="#2a1d10" opacity=".7" transform="rotate(-24 715 372)" text-anchor="middle">Trust is earned</text>
+</svg></div>
+</body></html>
